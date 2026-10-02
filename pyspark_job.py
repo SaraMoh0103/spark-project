@@ -2,6 +2,7 @@ import sys
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 
+# cleaning data by removing rows with zero or negative values and calculating amount with tax
 def clean_data(df):
     return(
     df
