@@ -1,0 +1,50 @@
+name: DataOps PySpark CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python Runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+    #   - name: Setup Java 17
+    #     uses: actions/setup-java@v4
+    #     with:
+    #       distribution: "temurin"
+    #       java-version: "17"
+
+      - name: Verify Runtime Versions
+        run: |
+          python --version
+          java -version
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Execute PySpark Unit Tests
+        run: |
+          python -m pytest -v test_pyspark_job.py
+
+      - name: Package Job Archive
+        run: |
+          zip -r job_archive.zip pyspark_job.py
+
+      - name: Upload Job Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyspark-job-archive
+          path: job_archive.zip
