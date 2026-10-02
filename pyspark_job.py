@@ -11,6 +11,7 @@ def clean_data(df):
     .filter(F.col("name").isNotNull() & (F.trim(F.col("name")) != ""))
     .withColumn("amount_with_tax", F.col("amount") * 1.20)
     )
+# run the main function to read the csv file, clean the data and save it to a new csv file
 def main(csv_path):
     spark = SparkSession.builder.appName("Data Cleaning Job").getOrCreate()
     try:
